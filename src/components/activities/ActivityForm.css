@@ -1,0 +1,29 @@
+form {
+  margin: auto;
+  overflow: hidden;
+  padding: 0 2rem;
+}
+
+.l-input {
+  min-height: 300px;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+textarea {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: inline-block;
+}
+
+.price-categories {
+  display: flex;
+  justify-content: space-between;
+}
