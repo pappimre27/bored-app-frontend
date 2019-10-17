@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './MyList.css';
 
 const MyList = () => {
+  const [activities, setActivities] = useState(
+    localStorage.getItem('activities')
+  );
+
+  if (activities === null)
+    return (
+      <div className='form-container'>
+        <h4>Please add an activity...</h4>
+      </div>
+    );
+
   return (
     <div className='form-container'>
       <table>
