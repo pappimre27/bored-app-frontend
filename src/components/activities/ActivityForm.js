@@ -1,24 +1,24 @@
-import React, { useEffect, useState, Component, useAsyncEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import './ActivityForm.css';
 
 const ActivityForm = () => {
+  const fetchData = async () => {
+    try {
+      const res = await fetch('https://www.boredapi.com/api/activity');
+      const data = await res.json();
+      console.log(data);
+      setActivity({
+        activityDesc: data.activity,
+        type: data.type,
+        participants: data.participants,
+        price: data.price
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('https://www.boredapi.com/api/activity');
-        const data = await res.json();
-        console.log(data);
-        setActivity({
-          activityDesc: data.activity,
-          type: data.type,
-          participants: data.participants,
-          price: data.price
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchData();
     //eslint-disable-next-line
   }, []);
@@ -32,7 +32,7 @@ const ActivityForm = () => {
 
   const { activityDesc, type, participants, price } = activity;
 
-  const getActivities = () => {
+  const getActivitiesFromLS = () => {
     let activities;
     if (localStorage.getItem('activities') === null) {
       activities = [];
@@ -43,7 +43,7 @@ const ActivityForm = () => {
   };
 
   const addToLocalStorage = activity => {
-    const activities = getActivities();
+    const activities = getActivitiesFromLS();
     activities.push(activity);
     localStorage.setItem('activities', JSON.stringify(activities));
   };
@@ -57,20 +57,29 @@ const ActivityForm = () => {
       );
       const data = await res.json();
       console.log(data);
-      setActivity({
-        activityDesc: data.activity,
-        type: data.type,
-        participants: data.participants,
-        price: data.price
-      });
+      if (data.hasOwnProperty('error')) {
+        alert('error');
+      } else {
+        setActivity({
+          activityDesc: data.activity,
+          type: data.type,
+          participants: data.participants,
+          price: data.price
+        });
+      }
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
   const handleClick = e => {
     e.preventDefault();
     addToLocalStorage({ activityDesc, type, participants, price });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    fetchData();
   };
 
   const activityTypes = [
@@ -86,7 +95,7 @@ const ActivityForm = () => {
   ];
 
   return (
-    <form className='grid-2'>
+    <form className='grid-2' onSubmit={handleSubmit}>
       <div className='flex-container'>
         <h3>You should</h3>
         <textarea
