@@ -1,19 +1,23 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, Component, useAsyncEffect } from 'react';
 
 import './ActivityForm.css';
 
 const ActivityForm = () => {
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch('https://www.boredapi.com/api/activity');
-      const data = await res.json();
-      console.log(data);
-      setActivity({
-        activityDesc: data.activity,
-        type: data.type,
-        participants: data.participants,
-        price: data.price
-      });
+      try {
+        const res = await fetch('https://www.boredapi.com/api/activity');
+        const data = await res.json();
+        console.log(data);
+        setActivity({
+          activityDesc: data.activity,
+          type: data.type,
+          participants: data.participants,
+          price: data.price
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchData();
     //eslint-disable-next-line
@@ -44,20 +48,28 @@ const ActivityForm = () => {
     localStorage.setItem('activities', JSON.stringify(activities));
   };
 
-  // const getId = () => {
-  //   return localStorage.getItem('activities') === null
-  //     ? 1
-  //     : localStorage.getItem('activities').length + 1;
-  // };
-
   const handleChange = async e => {
-    setActivity({ ...activity, [e.target.name]: e.target.value });
-    console.log(e.target.value);
+    const { name, value } = e.target;
+    setActivity({ ...activity, [name]: value });
+    try {
+      const res = await fetch(
+        `https://www.boredapi.com/api/activity?${name}=${value}`
+      );
+      const data = await res.json();
+      console.log(data);
+      setActivity({
+        activityDesc: data.activity,
+        type: data.type,
+        participants: data.participants,
+        price: data.price
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClick = e => {
     e.preventDefault();
-    // let id = getId();
     addToLocalStorage({ activityDesc, type, participants, price });
   };
 

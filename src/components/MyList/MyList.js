@@ -43,20 +43,6 @@ const MyList = () => {
               <td>X</td>
             </tr>
           ))}
-          {/* <tr>
-            <td>1</td>
-            <td>Go to karaoke with friends</td>
-            <td>4</td>
-            <td>Cheap</td>
-            <td>x</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Go to karaoke with friends</td>
-            <td>4</td>
-            <td>Cheap</td>
-            <td>x</td>
-          </tr> */}
         </tbody>
       </table>
       <button onClick={handleClick} className='btn btn-primary btn-block'>
