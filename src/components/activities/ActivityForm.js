@@ -3,18 +3,6 @@ import React, { useEffect, useState, Component } from 'react';
 import './ActivityForm.css';
 
 const ActivityForm = () => {
-  const activityTypes = [
-    'education',
-    'recreational',
-    'social',
-    'diy',
-    'charity',
-    'cooking',
-    'relaxation',
-    'music',
-    'busywork'
-  ];
-
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch('https://www.boredapi.com/api/activity');
@@ -28,6 +16,7 @@ const ActivityForm = () => {
       });
     };
     fetchData();
+    //eslint-disable-next-line
   }, []);
 
   const [activity, setActivity] = useState({
@@ -39,10 +28,50 @@ const ActivityForm = () => {
 
   const { activityDesc, type, participants, price } = activity;
 
-  const handleChange = e => {
+  const getActivities = () => {
+    let activities;
+    if (localStorage.getItem('activities') === null) {
+      activities = [];
+    } else {
+      activities = JSON.parse(localStorage.getItem('activities'));
+    }
+    return activities;
+  };
+
+  const addToLocalStorage = activity => {
+    const activities = getActivities();
+    activities.push(activity);
+    localStorage.setItem('activities', JSON.stringify(activities));
+  };
+
+  // const getId = () => {
+  //   return localStorage.getItem('activities') === null
+  //     ? 1
+  //     : localStorage.getItem('activities').length + 1;
+  // };
+
+  const handleChange = async e => {
     setActivity({ ...activity, [e.target.name]: e.target.value });
     console.log(e.target.value);
   };
+
+  const handleClick = e => {
+    e.preventDefault();
+    // let id = getId();
+    addToLocalStorage({ activityDesc, type, participants, price });
+  };
+
+  const activityTypes = [
+    'education',
+    'recreational',
+    'social',
+    'diy',
+    'charity',
+    'cooking',
+    'relaxation',
+    'music',
+    'busywork'
+  ];
 
   return (
     <form className='grid-2'>
@@ -60,6 +89,7 @@ const ActivityForm = () => {
           className='btn btn-block btn-primary'
           value='Save for later'
           style={{ backgroundColor: '#dc3545' }}
+          onClick={handleClick}
         />
       </div>
       <div>
