@@ -457,4 +457,62 @@ table th {
     text-align: center;
     justify-content: center;
   }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    border: 1px solid #ccc;
+  }
+
+  td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /*
+	Label the data
+	*/
+  td:nth-of-type(1):before {
+    font-weight: bold;
+    content: '#';
+    margin-right: 3rem;
+  }
+  td:nth-of-type(2):before {
+    font-weight: bold;
+
+    content: 'Activity';
+    margin-right: 3rem;
+  }
+  td:nth-of-type(3):before {
+    font-weight: bold;
+    content: 'Participants';
+    margin-right: 3rem;
+  }
+  td:nth-of-type(4):before {
+    font-weight: bold;
+    content: 'Budget';
+    margin-right: 3rem;
+  }
+  td:nth-of-type(5):before {
+    font-weight: bold;
+    content: 'Delete';
+    margin-right: 3rem;
+  }
 }
