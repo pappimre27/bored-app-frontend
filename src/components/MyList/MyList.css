@@ -5,11 +5,14 @@
   justify-content: center;
 }
 
-table,
-th,
-td {
-  border: 1px solid black;
+table {
+  border-top: 1px solid rgb(170, 167, 167);
+  border-bottom: 1px solid rgb(170, 167, 167);
   border-collapse: collapse;
+}
+
+tr {
+  border-top: 1px solid rgb(170, 167, 167);
 }
 
 table {

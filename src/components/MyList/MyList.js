@@ -52,6 +52,7 @@ const MyList = () => {
             <th>Activity</th>
             <th>Participants</th>
             <th>Budget</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
