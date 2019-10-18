@@ -34,7 +34,7 @@ body {
   height: 500px;
   border: 1px solid #333;
   border-radius: 3px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 a {
@@ -264,8 +264,7 @@ img {
 .bg-danger,
 .badge-danger,
 .alert-danger {
-  background: var(--danger-color);
-  color: #fff;
+  color: var(--danger-color);
 }
 
 .btn-success,

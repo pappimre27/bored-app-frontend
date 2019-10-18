@@ -27,3 +27,7 @@ label {
   display: flex;
   justify-content: space-between;
 }
+
+/* input[type='submit'] {
+  margin-top: 1rem;
+} */

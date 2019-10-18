@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import uuid from 'uuid';
+import Alert from '../layout/Alert';
 import './ActivityForm.css';
 
 const ActivityForm = () => {
@@ -8,6 +9,11 @@ const ActivityForm = () => {
     type: '',
     participants: 0,
     price: 0
+  });
+
+  const [alert, setAlert] = useState({
+    type: '',
+    msg: ''
   });
 
   const setDatas = data => {
@@ -34,7 +40,7 @@ const ActivityForm = () => {
     //eslint-disable-next-line
   }, []);
 
-  const getActivitiesFromLS = () => {
+  const getFromLocalStorage = () => {
     let activities;
     if (localStorage.getItem('activities') === null) {
       activities = [];
@@ -45,7 +51,7 @@ const ActivityForm = () => {
   };
 
   const addToLocalStorage = activity => {
-    const activities = getActivitiesFromLS();
+    const activities = getFromLocalStorage();
     activities.push(activity);
     localStorage.setItem('activities', JSON.stringify(activities));
   };
@@ -59,8 +65,18 @@ const ActivityForm = () => {
           `https://www.boredapi.com/api/activity?${name}=${value}`
         );
         const data = await res.json();
+        console.log(data);
         if (data.hasOwnProperty('error')) {
-          alert('error');
+          setAlert({
+            type: 'danger',
+            msg: data.error
+          });
+          setTimeout(() => {
+            setAlert({
+              type: '',
+              msg: ''
+            });
+          }, 5000);
         } else {
           setDatas(data);
         }
@@ -72,9 +88,9 @@ const ActivityForm = () => {
 
   const { activityDesc, type, participants, price } = activity;
 
-  const handleClick = e => {
-    let id = uuid.v4();
+  const saveForLater = e => {
     e.preventDefault();
+    let id = uuid.v4();
     addToLocalStorage({ id, activityDesc, type, participants, price });
   };
 
@@ -96,78 +112,81 @@ const ActivityForm = () => {
   ];
 
   return (
-    <form className='grid-2' onSubmit={handleSubmit}>
-      <div className='flex-container'>
-        <h3>You should</h3>
-        <textarea
-          type='text'
-          className='l-input'
-          name='activityDesc'
-          value={activityDesc}
-          onChange={handleChange}
-        />
-        <input
-          type='submit'
-          className='btn btn-block btn-primary'
-          value='Save for later'
-          style={{ backgroundColor: '#dc3545' }}
-          onClick={handleClick}
-        />
-      </div>
-      <div>
-        <h3>Activity details</h3>
-        <div style={{ minHeight: '300px' }}>
-          <div className='form-group'>
-            <label>Type</label>
-            <select name='type' value={type} onChange={handleChange}>
-              <option key={type} value={type}>
-                {type}
-              </option>
-              {activityTypes.map(
-                activity =>
-                  activity !== type && (
-                    <option key={activity} value={activity}>
-                      {activity}
-                    </option>
-                  )
-              )}
-            </select>
-          </div>
-          <div className='form-group'>
-            <label>Participants</label>
-            <input
-              type='number'
-              name='participants'
-              value={participants}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <label>Budget</label>
-            <input
-              type='range'
-              name='price'
-              value={price}
-              min={0}
-              step={0.1}
-              max={1}
-              onChange={handleChange}
-            />
-          </div>
-          <ul className='price-categories'>
-            <li>Cheap</li>
-            <li>Expensive</li>
-          </ul>
+    <Fragment>
+      <Alert alert={alert} />
+      <form className='grid-2' onSubmit={handleSubmit}>
+        <div className='flex-container'>
+          <h3>You should</h3>
+          <textarea
+            type='text'
+            className='l-input'
+            name='activityDesc'
+            value={activityDesc}
+            onChange={handleChange}
+          />
+          <input
+            type='submit'
+            className='btn btn-block btn-primary'
+            value='Save for later'
+            style={{ backgroundColor: '#dc3545' }}
+            onClick={saveForLater}
+          />
         </div>
-        <input
-          type='submit'
-          className='btn btn-block btn-primary'
-          value='Hit me with a new one!'
-          style={{ marginTop: '1rem' }}
-        />
-      </div>
-    </form>
+        <div>
+          <h3>Activity details</h3>
+          <div style={{ minHeight: '300px' }}>
+            <div className='form-group'>
+              <label>Type</label>
+              <select name='type' value={type} onChange={handleChange}>
+                <option key={type} value={type}>
+                  {type}
+                </option>
+                {activityTypes.map(
+                  activity =>
+                    activity !== type && (
+                      <option key={activity} value={activity}>
+                        {activity}
+                      </option>
+                    )
+                )}
+              </select>
+            </div>
+            <div className='form-group'>
+              <label>Participants</label>
+              <input
+                type='number'
+                name='participants'
+                value={participants}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className='form-group'>
+              <label>Budget</label>
+              <input
+                type='range'
+                name='price'
+                value={price}
+                min={0}
+                step={0.1}
+                max={1}
+                onChange={handleChange}
+              />
+            </div>
+            <ul className='price-categories'>
+              <li>Cheap</li>
+              <li>Expensive</li>
+            </ul>
+          </div>
+          <input
+            type='submit'
+            className='btn btn-block btn-primary'
+            value='Hit me with a new one!'
+            style={{ marginTop: '1rem' }}
+          />
+        </div>
+      </form>
+    </Fragment>
   );
 };
 

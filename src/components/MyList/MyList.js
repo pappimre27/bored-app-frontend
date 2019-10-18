@@ -4,7 +4,7 @@ import './MyList.css';
 const MyList = () => {
   const [activities, setActivities] = useState([]);
 
-  const getActivitiesFromLS = () => {
+  const getFromLocalStorage = () => {
     let activities;
     if (localStorage.getItem('activities') === null) {
       activities = [];
@@ -15,8 +15,9 @@ const MyList = () => {
   };
 
   useEffect(() => {
-    const activities = getActivitiesFromLS();
+    const activities = getFromLocalStorage();
     setActivities(activities);
+    //eslint-disable-next-line
   }, []);
 
   const clearAll = () => {
@@ -25,9 +26,11 @@ const MyList = () => {
   };
 
   const deleteActivity = id => {
-    const activities = getActivitiesFromLS();
+    const activities = getFromLocalStorage();
     if (activities.length !== 0) {
+      // delete from state
       setActivities(activities.filter(activity => activity.id !== id));
+      // delete from local storage
       const filtered = activities.filter(activity => activity.id !== id);
       localStorage.setItem('activities', JSON.stringify(filtered));
     }
@@ -70,7 +73,10 @@ const MyList = () => {
             ))}
         </tbody>
       </table>
-      <button onClick={clearAll} className='btn btn-primary btn-block'>
+      <button
+        onClick={clearAll}
+        className='btn btn-primary btn-block'
+        style={{ backgroundColor: '#dc3545' }}>
         Clear all
       </button>
     </div>
