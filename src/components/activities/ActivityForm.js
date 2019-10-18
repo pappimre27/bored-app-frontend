@@ -56,6 +56,19 @@ const ActivityForm = () => {
     localStorage.setItem('activities', JSON.stringify(activities));
   };
 
+  const handleError = (type, msg) => {
+    setAlert({
+      type,
+      msg
+    });
+    setTimeout(() => {
+      setAlert({
+        type: '',
+        msg: ''
+      });
+    }, 5000);
+  };
+
   const handleChange = async e => {
     const { name, value } = e.target;
     if (name !== 'activityDesc') {
@@ -65,18 +78,8 @@ const ActivityForm = () => {
           `https://www.boredapi.com/api/activity?${name}=${value}`
         );
         const data = await res.json();
-        console.log(data);
         if (data.hasOwnProperty('error')) {
-          setAlert({
-            type: 'danger',
-            msg: data.error
-          });
-          setTimeout(() => {
-            setAlert({
-              type: '',
-              msg: ''
-            });
-          }, 5000);
+          handleError('danger', data.error);
         } else {
           setDatas(data);
         }
@@ -86,12 +89,10 @@ const ActivityForm = () => {
     }
   };
 
-  const { activityDesc, type, participants, price } = activity;
-
   const saveForLater = e => {
     e.preventDefault();
     let id = uuid.v4();
-    addToLocalStorage({ id, activityDesc, type, participants, price });
+    addToLocalStorage({ id, ...activity });
   };
 
   const handleSubmit = e => {
@@ -110,6 +111,8 @@ const ActivityForm = () => {
     'music',
     'busywork'
   ];
+
+  const { activityDesc, type, participants, price } = activity;
 
   return (
     <Fragment>

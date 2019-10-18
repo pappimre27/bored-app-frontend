@@ -64,7 +64,7 @@ const MyList = () => {
                 <td>{activity.participants}</td>
                 <td>{activity.price <= 0.5 ? 'cheap' : 'Expensive'}</td>
                 <td>
-                  <a href='#' onClick={deleteActivity.bind(this, activity.id)}>
+                  <a onClick={deleteActivity.bind(this, activity.id)}>
                     <i
                       style={{ fontSize: '26px' }}
                       className='fa fa-check-circle'></i>
