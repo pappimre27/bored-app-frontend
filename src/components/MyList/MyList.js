@@ -2,25 +2,43 @@ import React, { useEffect, useState } from 'react';
 import './MyList.css';
 
 const MyList = () => {
-  // useEffect(() => {
-  //   setActivities(localStorage.getItem('activities'));
-  // }, null);
+  const [activities, setActivities] = useState([]);
 
-  const [activities, setActivities] = useState(
-    JSON.parse(localStorage.getItem('activities'))
-  );
+  const getActivitiesFromLS = () => {
+    let activities;
+    if (localStorage.getItem('activities') === null) {
+      activities = [];
+    } else {
+      activities = JSON.parse(localStorage.getItem('activities'));
+    }
+    return activities;
+  };
 
-  if (activities === null)
+  useEffect(() => {
+    const activities = getActivitiesFromLS();
+    setActivities(activities);
+  }, []);
+
+  const clearAll = () => {
+    localStorage.removeItem('activities');
+    setActivities([]);
+  };
+
+  const deleteActivity = id => {
+    const activities = getActivitiesFromLS();
+    if (activities.length !== 0) {
+      setActivities(activities.filter(activity => activity.id !== id));
+      const filtered = activities.filter(activity => activity.id !== id);
+      localStorage.setItem('activities', JSON.stringify(filtered));
+    }
+  };
+
+  if (activities.length === 0)
     return (
-      <div className='form-container'>
+      <div className='flex-container'>
         <h4>Please add an activity...</h4>
       </div>
     );
-
-  const handleClick = () => {
-    localStorage.removeItem('activities');
-    setActivities(null);
-  };
 
   return (
     <div className='form-container'>
@@ -34,18 +52,25 @@ const MyList = () => {
           </tr>
         </thead>
         <tbody>
-          {activities.map((activity, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{activity.activityDesc}</td>
-              <td>{activity.participants}</td>
-              <td>{activity.price >= 0.5 ? 'cheap' : 'Expensive'}</td>
-              <td>X</td>
-            </tr>
-          ))}
+          {activities.length !== 0 &&
+            activities.map((activity, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{activity.activityDesc}</td>
+                <td>{activity.participants}</td>
+                <td>{activity.price <= 0.5 ? 'cheap' : 'Expensive'}</td>
+                <td>
+                  <a href='#' onClick={deleteActivity.bind(this, activity.id)}>
+                    <i
+                      style={{ fontSize: '26px' }}
+                      className='fa fa-check-circle'></i>
+                  </a>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
-      <button onClick={handleClick} className='btn btn-primary btn-block'>
+      <button onClick={clearAll} className='btn btn-primary btn-block'>
         Clear all
       </button>
     </div>

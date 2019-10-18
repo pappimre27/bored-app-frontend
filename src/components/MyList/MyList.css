@@ -5,12 +5,15 @@
   justify-content: center;
 }
 
-table {
-  border: 1px solid #333;
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
 }
 
-tr {
-  border-top: 1px solid #333;
+table {
+  width: 100%;
 }
 
 button {

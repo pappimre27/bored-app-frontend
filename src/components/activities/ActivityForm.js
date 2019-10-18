@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import uuid from 'uuid';
 import './ActivityForm.css';
 
 const ActivityForm = () => {
+  const [activity, setActivity] = useState({
+    activityDesc: '',
+    type: '',
+    participants: 0,
+    price: 0
+  });
+
+  const setDatas = data => {
+    setActivity({
+      activityDesc: data.activity,
+      type: data.type,
+      participants: data.participants,
+      price: data.price
+    });
+  };
+
   const fetchData = async () => {
     try {
       const res = await fetch('https://www.boredapi.com/api/activity');
       const data = await res.json();
-      console.log(data);
-      setActivity({
-        activityDesc: data.activity,
-        type: data.type,
-        participants: data.participants,
-        price: data.price
-      });
+      setDatas(data);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
@@ -22,15 +33,6 @@ const ActivityForm = () => {
     fetchData();
     //eslint-disable-next-line
   }, []);
-
-  const [activity, setActivity] = useState({
-    activityDesc: '',
-    type: '',
-    participants: 0,
-    price: 0.0
-  });
-
-  const { activityDesc, type, participants, price } = activity;
 
   const getActivitiesFromLS = () => {
     let activities;
@@ -50,31 +52,30 @@ const ActivityForm = () => {
 
   const handleChange = async e => {
     const { name, value } = e.target;
-    setActivity({ ...activity, [name]: value });
-    try {
-      const res = await fetch(
-        `https://www.boredapi.com/api/activity?${name}=${value}`
-      );
-      const data = await res.json();
-      console.log(data);
-      if (data.hasOwnProperty('error')) {
-        alert('error');
-      } else {
-        setActivity({
-          activityDesc: data.activity,
-          type: data.type,
-          participants: data.participants,
-          price: data.price
-        });
+    if (name !== 'activityDesc') {
+      setActivity({ ...activity, [name]: value });
+      try {
+        const res = await fetch(
+          `https://www.boredapi.com/api/activity?${name}=${value}`
+        );
+        const data = await res.json();
+        if (data.hasOwnProperty('error')) {
+          alert('error');
+        } else {
+          setDatas(data);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      alert(error);
     }
   };
 
+  const { activityDesc, type, participants, price } = activity;
+
   const handleClick = e => {
+    let id = uuid.v4();
     e.preventDefault();
-    addToLocalStorage({ activityDesc, type, participants, price });
+    addToLocalStorage({ id, activityDesc, type, participants, price });
   };
 
   const handleSubmit = e => {
@@ -123,10 +124,10 @@ const ActivityForm = () => {
                 {type}
               </option>
               {activityTypes.map(
-                act =>
-                  act !== type && (
-                    <option key={act} value={act}>
-                      {act}
+                activity =>
+                  activity !== type && (
+                    <option key={activity} value={activity}>
+                      {activity}
                     </option>
                   )
               )}
