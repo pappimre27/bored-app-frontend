@@ -11,6 +11,8 @@ const ActivityForm = () => {
     price: 0
   });
 
+  const { activityDesc, type, participants, price } = activity;
+
   const [alert, setAlert] = useState({
     type: '',
     msg: ''
@@ -69,23 +71,27 @@ const ActivityForm = () => {
     }, 5000);
   };
 
-  const handleChange = async e => {
+  const fetchActivity = async (name, value) => {
+    try {
+      const res = await fetch(
+        `https://www.boredapi.com/api/activity?${name}=${value}`
+      );
+      const data = await res.json();
+      if (data.hasOwnProperty('error')) {
+        handleError('danger', data.error);
+      } else {
+        setDatas(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChange = e => {
     const { name, value } = e.target;
     if (name !== 'activityDesc') {
       setActivity({ ...activity, [name]: value });
-      try {
-        const res = await fetch(
-          `https://www.boredapi.com/api/activity?${name}=${value}`
-        );
-        const data = await res.json();
-        if (data.hasOwnProperty('error')) {
-          handleError('danger', data.error);
-        } else {
-          setDatas(data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      fetchActivity(name, value);
     }
   };
 
@@ -111,8 +117,6 @@ const ActivityForm = () => {
     'music',
     'busywork'
   ];
-
-  const { activityDesc, type, participants, price } = activity;
 
   return (
     <Fragment>

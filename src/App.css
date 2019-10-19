@@ -7,6 +7,7 @@
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
   --success-color: #28a745;
+  --border-style: 1px solid rgb(209, 206, 206);
 }
 
 * {
