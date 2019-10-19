@@ -6,6 +6,7 @@
 }
 
 table {
+  width: 100%;
   border-top: var(--border-style);
   border-bottom: var(--border-style);
   border-collapse: collapse;
@@ -13,10 +14,6 @@ table {
 
 tr {
   border-top: var(--border-style);
-}
-
-table {
-  width: 100%;
 }
 
 button {
