@@ -4,7 +4,7 @@ const Alert = ({ alert }) => {
   return (
     alert.msg !== '' && (
       <div className={`text-center alert alert-${alert.type}`}>
-        <i className='fas fa-info-circle' />
+        <i style={{ color: '#dc3545' }} className='fas fa-info-circle' />
         {alert.msg}
       </div>
     )
