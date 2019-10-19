@@ -43,6 +43,7 @@ a,
 i {
   color: var(--primary-color);
   text-decoration: none;
+  cursor: pointer;
 }
 
 a,
