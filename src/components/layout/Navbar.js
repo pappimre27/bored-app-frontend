@@ -6,7 +6,7 @@ const Navbar = props => {
     <div className='navbar bg-primary'>
       <ul>
         <li>
-          <Link to='/activities'>Activities</Link>
+          <Link to='/'>Activities</Link>
         </li>
         <li>
           <Link to='/mylist'>My List</Link>
